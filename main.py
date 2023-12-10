@@ -1,22 +1,28 @@
 import core.progress_circle
+import core.cli
+import configparser
 import datetime
+import time
+import sys
+import os
 
 
-def main():
-    a = core.progress_circle.CircleProgressBar(0, 10)
-    desc = f"""
-{datetime.datetime.now().date()}
-{datetime.datetime.now().time()}
-Current Cycle: [10/10]
-[]
-"""
+def main(root_pth: str):
+    # ===>----------------------
+    # READ THE CONFIG
+    # ===>----------------------
+    assert os.path.exists(os.path.join(root_pth, 'config.ini')), 'The file config.ini does`t exists in the root folder!'
+    config = configparser.ConfigParser()
+    config.read(os.path.join(root_pth, 'config.ini'))
 
-    print(a.get_display(desc, 12, thickness=5))
+    cli = core.cli.ConsoleUI(config)
+    cli.run()
 
 
 if __name__ == '__main__':
-    main()
-
+    main(
+        root_pth=os.getcwd()
+    )
 
 
 #    print("""
@@ -30,3 +36,6 @@ if __name__ == '__main__':
 #                             Period         :   3    times (0 - 5)
 #
 # """)
+
+
+

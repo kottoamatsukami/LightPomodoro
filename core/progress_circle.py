@@ -6,7 +6,7 @@ gradient = {
     lambda x: 0.50 < x <= 2: '.',
 }
 
-ratio = 2.75
+ratio = 2.3
 step  = 0.05
 prec  = 5
 
@@ -19,7 +19,7 @@ class CircleProgressBar(object):
 
         self.min_value        = min_value
         self.max_value        = max_value
-        self.current_progress = 5
+        self.current_progress = min_value
 
     def get_simple_progress(self) -> float:
         return self.current_progress/self.max_value
@@ -48,19 +48,32 @@ class CircleProgressBar(object):
                         break
                 circle[round(y)+radius][round(ratio*(x+radius))] = char
 
+        # # Put the text inside the circle
+        # desc = desc.strip()
+        # lines = desc.split('\n')
+        # n = len(lines)
+        # c = 0
+        # for circle_line_ind in range(round(radius-n/2), round(radius + n/2) + n % 2):
+        #     line = lines[c].strip()
+        #     n_l  = len(line)
+        #     w = 0
+        #     for i in range(round(ratio*radius)-n_l//2, round(ratio*radius)+n_l//2):
+        #         circle[circle_line_ind][i] = line[w]
+        #         w += 1
+        #     c += 1
+
         # Put the text inside the circle
-        desc = desc.strip()
-        lines = desc.split('\n')
-        n = len(lines)
-        c = 0
-        for circle_line_ind in range(round(radius-n/2), round(radius + n/2) + n % 2):
-            line = lines[c]
-            n_l  = len(line)
-            w = 0
-            for i in range(round(ratio*radius)-n_l//2, round(ratio*radius)+n_l//2):
-                circle[circle_line_ind][i] = line[w]
-                w += 1
-            c += 1
+        lines: list[str] = desc.split('\n')
+        len_lines: int = len(lines)
+        for cur_line in range(len_lines):
+            line = lines[cur_line].strip()
+            len_line = len(line)
+            for cur_char in range(len_line):
+                circle[
+                    radius - len_lines // 2 + cur_line
+                    ][
+                    round(ratio*radius) - len_line // 2 + cur_char
+                    ] = lines[cur_line].strip()[cur_char]
         return '\n'.join(''.join(line) for line in circle)
 
     @staticmethod
